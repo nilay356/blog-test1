@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bullying Complaint – Schools Blog</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container header-inner">
+      <div class="brand"><span>Schools</span> Blog</div>
+
+        <button id="mobileToggle5" class="mobile-toggle">☰</button>
+
+        <nav id="mainNav" class="nav">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="whats-new.html" class="nav-link">What's New</a>
+    <a href="events.html" class="nav-link">Events</a>
+    <a href="gallery.html" class="nav-link">Gallery</a>
+
+    <div class="dropdown">
+        <button class="nav-link dropdown-btn">School Info ▼</button>
+        <div class="dropdown-menu">
+            <a href="principal.html">Principal</a>
+            <a href="director.html">Director</a>
+            <a href="chairman.html">Chairman</a>
+            <a href="coordinators.html">Coordinators</a>
+            <a href="mission-vision.html">Mission & Vision</a>
+        </div>
+    </div>
+
+    <!-- NEW MORE DROPDOWN -->
+    <div class="dropdown">
+        <button class="nav-link dropdown-btn">More ▼</button>
+        <div class="dropdown-menu">
+            <a href="contact.html">Contact</a>
+            <a href="about.html">About</a>
+            <a href="bullying-complaint.html">Report Bullying</a>
+        </div>
+    </div>
+</nav>
+
+    </div>
+</header>
+
+
+<main class="container">
+
+    <h1 class="page-title">Bullying Complaint Form</h1>
+    <p class="contact-intro">
+        Your safety matters. Complaints are confidential. You may submit anonymously.
+    </p>
+
+    <div class="bully-wrapper">
+        <form id="bullyForm">
+
+            <!-- Anonymous checkbox -->
+            <label class="toggle-label">
+                <input type="checkbox" id="anonymousToggle"> Submit anonymously
+            </label>
+
+            <!-- Identity fields -->
+            <div id="identityFields">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="name" name="name">
+                </div>
+
+                <div class="form-group">
+                    <label>Class / Grade</label>
+                    <input type="text" id="grade" name="grade">
+                </div>
+            </div>
+
+            <!-- Type of bullying -->
+            <div class="form-group">
+                <label>Type of Bullying</label>
+                <select id="bullyType" name="bullyType">
+                    <option>Verbal Bullying</option>
+                    <option>Physical Bullying</option>
+                    <option>Cyber Bullying</option>
+                    <option>Social / Exclusion</option>
+                    <option>Harassment</option>
+                </select>
+            </div>
+
+            <!-- Incident -->
+            <div class="form-group">
+                <label>Describe the Incident</label>
+                <textarea id="description" name="description" rows="5" required></textarea>
+            </div>
+
+            <!-- Evidence upload -->
+            <div class="form-group">
+                <label>Upload Photo/Video Evidence (optional)</label>
+                <input type="file" id="evidence" accept="image/*,video/*">
+            </div>
+
+            <!-- Submit -->
+            <button class="btn btn-primary" type="submit">Submit Complaint</button>
+
+        </form>
+    </div>
+
+</main>
+
+<div id="successPopup" class="success-popup">✔ Complaint submitted</div>
+
+
+<script>
+/* Hide identity section */
+document.getElementById("anonymousToggle").addEventListener("change", function () {
+    document.getElementById("identityFields").style.display = this.checked ? "none" : "block";
+});
+
+/* Convert evidence → Base64 */
+function toBase64(file) {
+    return new Promise(res => {
+        const reader = new FileReader();
+        reader.onload = () => res(reader.result);
+        reader.readAsDataURL(file);
+    });
+}
+
+/* Submit form */
+document.getElementById("bullyForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const anonymous = document.getElementById("anonymousToggle").checked;
+
+    const name = anonymous ? "Anonymous" : document.getElementById("name").value;
+    const grade = anonymous ? "Anonymous" : document.getElementById("grade").value;
+    const bullyType = document.getElementById("bullyType").value;
+    const description = document.getElementById("description").value;
+
+    let file = document.getElementById("evidence").files[0];
+    let base64 = "";
+    let fileName = "";
+
+    if (file) {
+        base64 = await toBase64(file);
+        fileName = file.name;
+    }
+
+    const payload = {
+        anonymous,
+        name,
+        grade,
+        bullyType,
+        description,
+        evidenceBase64: base64,
+        evidenceName: fileName
+    };
+
+    const res = await fetch("https://blog-s96a.onrender.com/send-bullying-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
+
+    const pop = document.getElementById("successPopup");
+    pop.classList.add("show");
+    setTimeout(() => pop.classList.remove("show"), 3000);
+
+    e.target.reset();
+});
+
+</script>
+
+</body>
+</html>
