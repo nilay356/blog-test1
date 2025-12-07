@@ -375,13 +375,6 @@ html, body { overflow-x: hidden; }
 .about-hero h1{ font-size:40px; font-weight:700; }
 .about-content{ display:grid; gap:25px; max-width:900px; margin:auto; }
 
-/* about card */
-.about-card{
-  padding:25px;
-  border-left: 6px solid rgba(88,247,180,0.12);
-}
-.about-card h2{ margin-bottom:12px; color: #2b6cb0; }
-.about-card p{ opacity:0.85; line-height:1.6; }
 
 /* Vision / Mission left border color overrides */
 .about-card.vision { border-left-color: var(--accent-2); }
