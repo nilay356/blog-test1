@@ -746,3 +746,39 @@ body {
     }
 }
 
+/* Desktop - original post card layout */
+.post-card {
+  display: flex;
+  gap: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  align-items: stretch;
+}
+
+.post-card img {
+  width: 38%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ----- MOBILE VERSION (event-card style) ----- */
+@media (max-width: 768px) {
+
+  .post-card {
+    flex-direction: column;   /* stack like event-card */
+    padding: 0;
+  }
+
+  .post-card img {
+    width: 100% !important;   /* full width */
+    height: 220px !important; /* taller image */
+    display: block !important;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .post-body {
+    padding: 16px;
+  }
+}
